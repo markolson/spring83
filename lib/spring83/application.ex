@@ -5,10 +5,11 @@ defmodule Spring83.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      Spring83.CowboyServer
+      Spring83.CowboyServer,
+      Spring83.Boards
     ]
 
     opts = [strategy: :one_for_one, name: Spring83.Supervisor]
     Supervisor.start_link(children, opts)
   end
- end
+end
