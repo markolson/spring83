@@ -7,7 +7,7 @@ defmodule Spring83.Application do
     children = [
       Spring83.CowboyServer,
       Spring83.Boards,
-      Spring83.KeyServer
+      Spring83.KeyGenerator
     ]
 
     opts = [strategy: :one_for_one, name: Spring83.Supervisor]

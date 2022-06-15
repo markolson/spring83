@@ -1,4 +1,6 @@
-defmodule Spring83.KeyServer do
+defmodule Spring83.KeyGenerator do
+  alias Spring83.Key
+  
   require Logger
   use GenServer
   @year 2022
@@ -35,40 +37,13 @@ defmodule Spring83.KeyServer do
   defp do_generate(year) do
     {public, private} = :crypto.generate_key(:eddsa, :ed25519)
 
-    if valid?(year, public) do
+    if Key.well_formed?(year, public) do
       {Base.encode16(public), Base.encode16(private)}
     else
       do_generate(year)
     end
   end
 
-  @doc """
-    Validates a provided key against the date requirements
-
-    #EXAMPLES
-      iex> Spring83.Key.valid?(2023, "1c6ffef2825b294274478bad8c80a7a610d38245a9fded18cd004c4a67ed2023")
-      false
-      iex> Spring83.Key.valid?(2022, "1c6ffef2825b294274478bad8c80a7a610d38245a9fded18cd004c4a67ed2023")
-      true
-      iex> Spring83.Key.valid?(2023, "1c6ffef2825b294274478bad8c80a7a610d38245a9fded18cd004c4a67ed2023")
-      true
-      iex> Spring83.Key.valid?(2024, "1c6ffef2825b294274478bad8c80a7a610d38245a9fded18cd004c4a67ed2023")
-      false
-      
-      iex> Spring83.Key.valid?(2024, "1c6ffef2825b294274478bad8c80a7a610d38245a9fded18cd004c4a67ex2023")
-      false
-  """
-
-  def valid?(year, key) when is_integer(year) do
-    valid?(to_string(year), key) || valid?(to_string(year + 1), key)
-  end
-
-  def valid?(year, <<_::binary-size(58), "ED", year::binary-size(4)>> = _key)
-      when is_binary(year) do
-    true
-  end
-
-  def valid?(_, _), do: false
 
   defp write!({public_as_base16, private_as_base16} = _keypair, directory) do
     Path.join(directory, public_as_base16)
@@ -80,7 +55,7 @@ defmodule Spring83.KeyServer do
   def prune_invalid_keys(directory) do
     File.ls!(directory)
     |> Enum.map(fn public_key ->
-      if String.length(public_key) == 64 && !valid?(@year, public_key) do
+      if String.length(public_key) == 64 && !Key.well_formed?(@year, public_key) do
         Logger.info("Deleting invalid keypaid #{public_key}")
         Path.join(directory, public_key) |> File.rm()
       end
