@@ -6,7 +6,8 @@ defmodule Spring83.Application do
   def start(_type, _args) do
     children = [
       Spring83.CowboyServer,
-      Spring83.Boards
+      Spring83.Boards,
+      Spring83.KeyServer
     ]
 
     opts = [strategy: :one_for_one, name: Spring83.Supervisor]
