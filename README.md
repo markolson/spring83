@@ -1,21 +1,5 @@
 # Spring83
 
-**TODO: Add description**
+https://github.com/robinsloan/spring-83-spec/blob/main/draft-20220609.md
 
-## Installation
-
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `spring83` to your list of dependencies in `mix.exs`:
-
-```elixir
-def deps do
-  [
-    {:spring83, "~> 0.1.0"}
-  ]
-end
-```
-
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/spring83>.
-
+Run with `mix run --no-halt`
