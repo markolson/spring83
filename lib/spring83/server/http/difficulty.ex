@@ -1,4 +1,4 @@
-defmodule Spring83.Server.Difficulty do
+defmodule Spring83.Server.HTTP.Difficulty do
   alias Spring83.Boards
 
   def init(%{path: "/", method: "GET"} = request, state) do
@@ -8,6 +8,7 @@ defmodule Spring83.Server.Difficulty do
       "Spring-Version" => "83",
       "Spring-Difficulty" => "#{difficulty}"
     }
+
     body = "Difficulty is #{difficulty}"
 
     request = :cowboy_req.reply(200, headers, body, request)

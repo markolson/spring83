@@ -3,8 +3,8 @@ defmodule Spring83.CowboyServer do
   require Logger
   @port 8383
   @routes [
-    {"/", Spring83.Server.Difficulty, []},
-    {"/:id", Spring83.Server.Board, []}
+    {"/", Spring83.Server.HTTP.Difficulty, []},
+    {"/:id", Spring83.Server.HTTP.Board, []}
   ]
 
   def start_link(_) do
