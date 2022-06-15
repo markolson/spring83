@@ -11,10 +11,12 @@ defmodule Spring83.Boards do
     :dets.open_file(:"boards.ets", type: :bag)
   end
 
-  def count(), do: GenServer.call(@name, :count)
+  def difficulty(), do: GenServer.call(@name, :difficulty)
 
-  def handle_call(:count, from, table) do
-    GenServer.reply(from, :dets.info(table)[:size])
+  def handle_call(:difficulty, from, table) do
+    count = :dets.info(table)[:size]
+    difficulty = (count / 10_000_000) ** 4
+    GenServer.reply(from, difficulty)
     {:noreply, table}
   end
 end
