@@ -36,8 +36,7 @@ defmodule Spring83.KeyGenerator do
 
   defp do_generate(year) do
     {public, private} = :crypto.generate_key(:eddsa, :ed25519)
-
-    if Key.well_formed?(year, public) do
+    if Key.well_formed?(year, Base.encode16(public)) do
       {Base.encode16(public), Base.encode16(private)}
     else
       do_generate(year)

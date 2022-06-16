@@ -24,6 +24,6 @@ defmodule Spring83.CowboyServer do
   end
 
   def http_port do
-    Application.fetch_env!(:spring83, :http_port)
+    Application.fetch_env!(:spring83, :port)
   end
 end
