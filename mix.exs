@@ -14,7 +14,7 @@ defmodule Spring83.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger],
+      extra_applications: [:logger, :httpoison],
       mod: {Spring83.Application, []}
     ]
   end
@@ -23,7 +23,7 @@ defmodule Spring83.MixProject do
   defp deps do
     [
       {:cowboy, "~> 2.0"},
-      {:hackney, "~> 1.18"}
+      {:httpoison, "~> 1.8"}
     ]
   end
 end
