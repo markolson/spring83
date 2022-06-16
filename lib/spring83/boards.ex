@@ -9,7 +9,7 @@ defmodule Spring83.Boards do
 
   def init(_) do
     path = Application.fetch_env!(:spring83, :boardfile)
-    Path.dirname(path) |> File.mkdir_p!
+    Path.dirname(path) |> File.mkdir_p!()
     :dets.open_file(String.to_atom(path), type: :set)
   end
 

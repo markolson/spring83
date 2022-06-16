@@ -1,6 +1,7 @@
 defmodule Spring83.CowboyServer do
   use GenServer
   require Logger
+
   @routes [
     {"/heartbeat", Spring83.Server.HTTP.Heartbeat, []},
     {"/", Spring83.Server.HTTP.Difficulty, []},
@@ -17,7 +18,8 @@ defmodule Spring83.CowboyServer do
     opts = [port: http_port()]
 
     case :cowboy.start_clear(:http, opts, %{env: %{dispatch: dispatch}}) do
-      {:ok, pid} -> Logger.info("Server started at http://localhost:#{http_port()} [#{inspect(pid)}]")
+      {:ok, pid} ->
+        Logger.info("Server started at http://localhost:#{http_port()} [#{inspect(pid)}]")
     end
 
     {:ok, []}

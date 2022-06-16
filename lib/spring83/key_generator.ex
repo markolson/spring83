@@ -1,6 +1,6 @@
 defmodule Spring83.KeyGenerator do
   alias Spring83.Crypto
-  
+
   require Logger
   use GenServer
   @year 2022
@@ -36,13 +36,13 @@ defmodule Spring83.KeyGenerator do
 
   defp do_generate(year) do
     {public, private} = :crypto.generate_key(:eddsa, :ed25519)
+
     if Crypto.well_formed?(year, Base.encode16(public)) do
       {Base.encode16(public), Base.encode16(private)}
     else
       do_generate(year)
     end
   end
-
 
   defp write!({public_as_base16, private_as_base16} = _keypair, directory) do
     Path.join(directory, public_as_base16)

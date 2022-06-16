@@ -1,5 +1,5 @@
 defmodule Spring83.Crypto do
-  @max_sig (2**256 - 1)
+  @max_sig 2 ** 256 - 1
 
   @doc """
     Determine if a key meets the minimum difficulty in order to publish based on the
@@ -7,7 +7,7 @@ defmodule Spring83.Crypto do
   """
   @spec strong_enough?(integer(), float()) :: boolean()
   def strong_enough?(key, difficulty) do
-    threshold = @max_sig * ( 1.0 - difficulty)
+    threshold = @max_sig * (1.0 - difficulty)
     key < threshold
   end
 
