@@ -8,7 +8,9 @@ defmodule Spring83.Boards do
   end
 
   def init(_) do
-    :dets.open_file(:"boards.ets", type: :bag)
+    path = Application.fetch_env!(:spring83, :boardfile)
+    Path.dirname(path) |> File.mkdir_p!
+    :dets.open_file(String.to_atom(path), type: :set)
   end
 
   def difficulty(), do: GenServer.call(@name, :difficulty)
