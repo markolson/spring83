@@ -38,10 +38,12 @@ defmodule Spring83.Crypto do
 
   def well_formed?(_, _), do: false
 
+  # @spec sign(String.t(), String.t()) :: String.t()
   def sign(body, private_key) do
     :crypto.sign(:eddsa, :ed25519, body, [private_key, :ed25519])
   end
 
+  # @spec verify(String.t(), String.t(), String.()) :: boolean()
   def verify(body, signature, public_key) do
     :crypto.verify(:eddsa, :ed25519, body, signature, [public_key, :ed25519])
   end

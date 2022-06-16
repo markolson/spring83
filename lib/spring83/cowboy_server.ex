@@ -20,6 +20,9 @@ defmodule Spring83.CowboyServer do
     case :cowboy.start_clear(:http, opts, %{env: %{dispatch: dispatch}}) do
       {:ok, pid} ->
         Logger.info("Server started at http://localhost:#{http_port()} [#{inspect(pid)}]")
+
+      _ ->
+        Logger.info("Not starting server.")
     end
 
     {:ok, []}

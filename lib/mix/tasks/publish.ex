@@ -12,33 +12,24 @@ defmodule Mix.Tasks.Spring83.Publish do
     Logger.error("You have to supply a URL to a server")
   end
 
-  # TODO: make this do... ... less.
-  @doc """
-    PUT /<key> HTTP/1.1
-    Content-Type: text/html;charset=utf-8
-    Spring-Version: 83
-    If-Unmodified-Since: <date and time in HTTP format>
-    Authorization: Spring-83 Signature=<signature>
-
-    <board>
-  """
   @requirements ["app.start"]
   def run([html_path, server]) do
-    with {:ok, html} <- valid_html(html_path),
+    with {:ok, html, last_updated} <- valid_html(html_path),
+         #  {:ok, html, last_updated} <- enforce_meta_tag(html),
          {:ok, public_key, private_key} <- extract_keys(html_path),
          signature <- Spring83.Crypto.sign(html, private_key),
-         {:ok, 202} <-
-           Spring83.Publisher.Board.publish(server, public_key, html, signature) do
-      IO.inspect([html, private_key, signature])
+         {:ok, %{status_code: 202}} <-
+           Spring83.Publisher.Board.publish(server, public_key, html, last_updated, signature) do
+      Logger.info("Published at #{Path.join([server, public_key])}")
     else
-      error -> Logger.error(inspect error)
+      error -> Logger.error(inspect(error))
     end
   end
 
   defp valid_html(html_path) do
     if String.ends_with?(html_path, ".html") do
-      # TODO: some Floki stuff I guess.
-      {:ok, File.read!(html_path)}
+      # TODO: some Floki stuff I guess. Check for or inject the meta tag..
+      {:ok, File.read!(html_path), File.stat!(html_path).mtime}
     else
       {:bad_extension, html_path}
     end
@@ -48,7 +39,7 @@ defmodule Mix.Tasks.Spring83.Publish do
     public_key = keypath(html_path)
 
     if File.exists?(public_key) do
-      {:ok, public_key, Base.decode16!(File.read!(public_key))}
+      {:ok, Path.basename(public_key), Base.decode16!(File.read!(public_key))}
     else
       {:no_key_file, public_key}
     end
