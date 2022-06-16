@@ -1,5 +1,5 @@
 defmodule Spring83.KeyGenerator do
-  alias Spring83.Key
+  alias Spring83.Crypto
   
   require Logger
   use GenServer
@@ -36,7 +36,7 @@ defmodule Spring83.KeyGenerator do
 
   defp do_generate(year) do
     {public, private} = :crypto.generate_key(:eddsa, :ed25519)
-    if Key.well_formed?(year, Base.encode16(public)) do
+    if Crypto.well_formed?(year, Base.encode16(public)) do
       {Base.encode16(public), Base.encode16(private)}
     else
       do_generate(year)
@@ -54,7 +54,7 @@ defmodule Spring83.KeyGenerator do
   def prune_invalid_keys(directory) do
     File.ls!(directory)
     |> Enum.map(fn public_key ->
-      if String.length(public_key) == 64 && !Key.well_formed?(@year, public_key) do
+      if String.length(public_key) == 64 && !Crypto.well_formed?(@year, public_key) do
         Logger.info("Deleting invalid keypaid #{public_key}")
         Path.join(directory, public_key) |> File.rm()
       end

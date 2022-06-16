@@ -1,4 +1,4 @@
-defmodule Spring83.Key do
+defmodule Spring83.Crypto do
   @max_sig (2**256 - 1)
 
   @doc """
@@ -15,16 +15,15 @@ defmodule Spring83.Key do
     Validates a provided key against the date requirements
 
     # EXAMPLES
-      iex> Spring83.Key.well_formed?(2023, "1c6ffef2825b294274478bad8c80a7a610d38245a9fded18cd004c4a67ed2023")
+      iex> Spring83.Crypto.well_formed?(2023, "1c6ffef2825b294274478bad8c80a7a610d38245a9fded18cd004c4a67ED2023")
       false
-      iex> Spring83.Key.well_formed?(2022, "1c6ffef2825b294274478bad8c80a7a610d38245a9fded18cd004c4a67ed2023")
+      iex> Spring83.Crypto.well_formed?(2022, "1c6ffef2825b294274478bad8c80a7a610d38245a9fded18cd004c4a67ED2023")
       true
-      iex> Spring83.Key.well_formed?(2023, "1c6ffef2825b294274478bad8c80a7a610d38245a9fded18cd004c4a67ed2023")
+      iex> Spring83.Crypto.well_formed?(2023, "1c6ffef2825b294274478bad8c80a7a610d38245a9fded18cd004c4a67ED2023")
       true
-      iex> Spring83.Key.well_formed?(2024, "1c6ffef2825b294274478bad8c80a7a610d38245a9fded18cd004c4a67ed2023")
+      iex> Spring83.Crypto.well_formed?(2024, "1c6ffef2825b294274478bad8c80a7a610d38245a9fded18cd004c4a67ED2023")
       false
-      
-      iex> Spring83.Key.well_formed?(2024, "1c6ffef2825b294274478bad8c80a7a610d38245a9fded18cd004c4a67ex2023")
+      iex> Spring83.Crypto.well_formed?(2024, "1c6ffef2825b294274478bad8c80a7a610d38245a9fded18cd004c4a67ex2023")
       false
   """
   @spec well_formed?(integer() | String.t(), binary()) :: boolean()
@@ -38,4 +37,12 @@ defmodule Spring83.Key do
   end
 
   def well_formed?(_, _), do: false
+
+  def sign(body, private_key) do
+    :crypto.sign(:eddsa, :ed25519, body, [private_key, :ed25519])
+  end
+
+  def verify(body, signature, public_key) do
+    :crypto.verify(:eddsa, :ed25519, body, signature, [public_key, :ed25519])
+  end
 end
