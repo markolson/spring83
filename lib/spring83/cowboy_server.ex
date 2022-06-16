@@ -3,6 +3,7 @@ defmodule Spring83.CowboyServer do
   require Logger
   @port 8383
   @routes [
+    {"/heartbeat", Spring83.Server.HTTP.Heartbeat, []},
     {"/", Spring83.Server.HTTP.Difficulty, []},
     {"/:id", Spring83.Server.HTTP.Board, []}
   ]
